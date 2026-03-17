@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reyy - Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+        .page-content { display: none; }
+        .page-active { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-active { background: #2563eb; color: white !important; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); }
+        .filter-active { background: #2563eb; color: white; border-color: #2563eb; }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <div id="main-app" class="flex min-h-screen transition-opacity duration-500">
+        
+        <aside class="w-72 sticky top-0 h-screen p-6 flex flex-col border-r border-slate-200 bg-white">
+            <div class="text-3xl font-black text-blue-600 mb-12 px-2 italic">REYY.</div>
+            <nav class="flex-1 space-y-3">
+                <button onclick="showSection('beranda', this)" class="nav-btn nav-active w-full flex items-center space-x-4 p-4 rounded-2xl text-slate-500 font-bold transition-all">
+                    <i class="fa-solid fa-home"></i> <span>Beranda</span>
+                </button>
+                <button onclick="showSection('pelajaran', this)" class="nav-btn w-full flex items-center space-x-4 p-4 rounded-2xl text-slate-500 font-bold transition-all">
+                    <i class="fa-solid fa-book-open"></i> <span>Pelajaran 1-15</span>
+                </button>
+                <button onclick="showSection('ai-helper', this)" class="nav-btn w-full flex items-center space-x-4 p-4 rounded-2xl text-slate-500 font-bold transition-all">
+                    <i class="fa-solid fa-robot"></i> <span>Rangkum AI</span>
+                </button>
+            </nav>
+
+            <div class="mt-auto p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shadow-md">
+                    R
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-xs font-black truncate">Reyy User</p>
+                    <p class="text-[10px] text-slate-400">Local Storage Active</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-10">
+            
+            <section id="beranda" class="page-content page-active">
+                <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-12 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h1 class="text-5xl font-black mb-4 leading-tight">Selamat Datang,<br>Reyy User!</h1>
+                        <p class="text-blue-100 text-lg opacity-80">Kelola dan simpan materi belajarmu di sini.</p>
+                    </div>
+                    <i class="fa-solid fa-graduation-cap absolute -bottom-10 -right-10 text-[15rem] opacity-10 -rotate-12"></i>
+                </div>
+            </section>
+
+            <section id="pelajaran" class="page-content">
+                <h2 class="text-3xl font-black mb-8 italic">Katalog Pelajaran</h2>
+                <div id="grid-bab" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"></div>
+            </section>
+
+            <section id="detail-materi" class="page-content">
+                <button onclick="showSection('pelajaran')" class="mb-6 font-bold text-blue-600 flex items-center gap-2">
+                    <i class="fa-solid fa-chevron-left text-sm"></i> Kembali
+                </button>
+                
+                <div class="bg-white p-8 rounded-[3rem] border border-slate-200">
+                    <div class="flex flex-col md:flex-row justify-between gap-6 mb-8">
+                        <div>
+                            <h2 id="judul-bab" class="text-4xl font-black italic">Pelajaran 1</h2>
+                            <div class="flex gap-2 mt-4">
+                                <button id="btn-sem1" onclick="filterSemester('Semester 1')" class="px-4 py-2 rounded-xl border text-xs font-bold transition-all filter-active">Semester 1</button>
+                                <button id="btn-sem2" onclick="filterSemester('Semester 2')" class="px-4 py-2 rounded-xl border text-xs font-bold transition-all">Semester 2</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex flex-col gap-3 min-w-[300px]">
+                            <input id="f-title" type="text" placeholder="Nama Materi (Contoh: Bab 1 Atom)" class="p-3 rounded-xl border outline-none text-sm">
+                            <label class="bg-blue-600 text-white text-center py-3 rounded-xl font-bold cursor-pointer hover:bg-black transition text-sm">
+                                <input type="file" class="hidden" onchange="handleUpload(event)">
+                                <i class="fa-solid fa-upload mr-2"></i> Unggah Gambar Materi
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="file-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                </div>
+            </section>
+
+            <section id="ai-helper" class="page-content text-center py-20">
+                <div class="bg-slate-900 p-16 rounded-[4rem] text-white">
+                    <h2 class="text-4xl font-black mb-4 text-blue-400">Reyy AI Assistant</h2>
+                    <p class="text-slate-400 mb-8">Rangkum materi semester ini dengan bantuan AI khusus.</p>
+                    <a href="https://pelajarin.ai/onboarding" target="_blank" class="bg-white text-black px-12 py-4 rounded-2xl font-bold hover:bg-blue-500 hover:text-white transition inline-block">Mulai Sekarang</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Data disimpan secara lokal di browser tanpa perlu login
+        let storageData = JSON.parse(localStorage.getItem('reyy_v4_local')) || {};
+        let currentPel = 1;
+        let currentSem = "Semester 1";
+
+        // Render Daftar Pelajaran 1-15 secara otomatis
+        const gridBab = document.getElementById('grid-bab');
+        for(let i=1; i<=15; i++) {
+            const div = document.createElement('div');
+            div.className = "bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group";
+            div.onclick = () => openPelajaran(i);
+            div.innerHTML = `<div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-black mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all">${i}</div><h3 class="font-bold text-slate-700 italic">Pelajaran ${i}</h3>`;
+            gridBab.appendChild(div);
+        }
+
+        function openPelajaran(n) {
+            currentPel = n;
+            document.getElementById('judul-bab').innerText = `Pelajaran ${n}`;
+            renderFiles();
+            showSection('detail-materi');
+        }
+
+        function filterSemester(sem) {
+            currentSem = sem;
+            document.getElementById('btn-sem1').classList.toggle('filter-active', sem === 'Semester 1');
+            document.getElementById('btn-sem2').classList.toggle('filter-active', sem === 'Semester 2');
+            renderFiles();
+        }
+
+        function handleUpload(event) {
+            const file = event.target.files[0];
+            const title = document.getElementById('f-title').value || "Materi Baru";
+
+            if(file && file.type.startsWith('image')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if(!storageData[currentPel]) storageData[currentPel] = { "Semester 1": [], "Semester 2": [] };
+                    
+                    storageData[currentPel][currentSem].push({
+                        id: Date.now(),
+                        title: title,
+                        src: e.target.result
+                    });
+                    
+                    saveData();
+                    renderFiles();
+                    document.getElementById('f-title').value = "";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderFiles() {
+            const container = document.getElementById('file-grid');
+            container.innerHTML = '';
+            
+            const list = (storageData[currentPel] && storageData[currentPel][currentSem]) ? storageData[currentPel][currentSem] : [];
+
+            if(list.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-16 text-center text-slate-300 font-bold border-2 border-dashed border-slate-100 rounded-[2rem]">Belum ada materi untuk ${currentSem}.</div>`;
+                return;
+            }
+
+            list.forEach(m => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 group shadow-sm";
+                card.innerHTML = `
+                    <div class="h-44 relative">
+                        <img src="${m.src}" class="w-full h-full object-cover">
+                        <button onclick="deleteFile(${m.id})" class="absolute top-3 right-3 bg-red-500 text-white w-8 h-8 rounded-lg opacity-0 group-hover:opacity-100 transition flex items-center justify-center shadow-lg"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-sm truncate text-slate-800">${m.title}</h4>
+                        <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">${currentSem}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function deleteFile(id) {
+            storageData[currentPel][currentSem] = storageData[currentPel][currentSem].filter(m => m.id !== id);
+            saveData();
+            renderFiles();
+        }
+
+        function saveData() {
+            localStorage.setItem('reyy_v4_local', JSON.stringify(storageData));
+        }
+
+        function showSection(id, btn = null) {
+            document.querySelectorAll('.page-content').forEach(s => s.classList.remove('page-active'));
+            document.getElementById(id).classList.add('page-active');
+            if(btn) {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+                btn.classList.add('nav-active');
+            }
+        }
+    </script>
+</body>
+</html>
